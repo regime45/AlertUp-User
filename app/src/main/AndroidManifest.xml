@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.android.alertup_user">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -37,17 +36,17 @@
 
     <application
         android:allowBackup="true"
-
         android:exported="true"
         android:icon="@drawable/alert_icon"
         android:label="@string/app_name"
         android:roundIcon="@drawable/alert_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AlertUp_user">
+        <activity android:name=".user_id"></activity>
         <activity
             android:name=".FullscreenActivity"
-            android:exported="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
             android:label="AlertUp User"
             android:theme="@style/Theme.AlertUp_user.Fullscreen">
             <intent-filter>
@@ -81,9 +80,7 @@
         <activity
             android:name=".MapsActivity"
             android:exported="true"
-            android:label="User App">
-
-        </activity>
+            android:label="User App"></activity>
     </application>
 
 </manifest>

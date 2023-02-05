@@ -6,17 +6,13 @@
 
 
     <item android:id="@+id/ring"
-        android:title="ring"
+        android:title="ID"
+        app:showAsAction="always"
 
 
         />
 
-    <item android:id="@+id/vibrate"
-        android:title="vibrate"
 
-
-
-        />
 
 
 

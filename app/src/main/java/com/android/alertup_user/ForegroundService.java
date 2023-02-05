@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -27,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.UUID;
 
 
 public class ForegroundService extends Service {
@@ -152,7 +155,7 @@ public class ForegroundService extends Service {
                             "\nLongitude : " + locationResult.getLastLocation().getLongitude();
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("covid_tool").child("geofencing").child("user_location");
+                    DatabaseReference myRef = database.getReference("Alert_up").child("user_tracking").child("user_location");
 
                     DatabaseReference newChildRef = myRef.push();
                     String key = newChildRef.getKey();
@@ -161,16 +164,20 @@ public class ForegroundService extends Service {
                     String name = sharedPreferences.getString("name", "");
 
                     SharedPreferences.Editor editor = sharedPreferences.edit();
+                    String m_androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
                     editor.putString("last_latitude", String.valueOf(locationResult.getLastLocation().getLatitude()));
                     editor.putString("last_longitude", String.valueOf(locationResult.getLastLocation().getLongitude()));
+                    editor.putString("id", String.valueOf(m_androidId));
                     editor.commit();
 
-                    if (name != null) {
-                        myRef.child(name).child("name").setValue(name);
+
+
+                    if (m_androidId != null) {
+                       // myRef.child(m_androidId).child("name").setValue(name);
                         // myRef.child(name).child("Radius").setValue(contact);
-                        myRef.child(name).child("last_latitude").setValue(locationResult.getLastLocation().getLatitude());
-                        myRef.child(name).child("last_longitude").setValue(locationResult.getLastLocation().getLongitude());
+                        myRef.child(m_androidId).child("last_latitude").setValue(locationResult.getLastLocation().getLatitude());
+                        myRef.child(m_androidId).child("last_longitude").setValue(locationResult.getLastLocation().getLongitude());
                     }
                     //     Toast.makeText(context, " save successfully...", Toast.LENGTH_SHORT).show();
 
