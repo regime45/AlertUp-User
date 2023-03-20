@@ -34,8 +34,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 
@@ -90,8 +88,6 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -116,7 +112,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
 
 
-public class MapsActivity extends AppCompatActivity
+public class MapsActivity2 extends AppCompatActivity
         implements  OnMapReadyCallback,
         GoogleMap.OnPolylineClickListener,
         GoogleMap.OnPolygonClickListener{
@@ -169,7 +165,6 @@ public class MapsActivity extends AppCompatActivity
     Double longi3;
     Double lati4 ;
     Double longi4;
-    Button id ;
     List<LatLng> latLngs = null;
 
     List<LatLng> latLngList = new ArrayList<>();
@@ -243,18 +238,8 @@ public class MapsActivity extends AppCompatActivity
         @SuppressLint("WrongConstant") SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_APPEND);
         String sText = sharedPreferences.getString("ids", "");
 
-        try {
-            if (sText !=null){
-                //track_user();
-            }
-            else{
-                Toast.makeText(MapsActivity.this, "not available", Toast.LENGTH_LONG).show();
-            }
 
-        }
-        catch (Exception e)
-        {
-        }
+                track_user();
 
 
 
@@ -266,7 +251,7 @@ public class MapsActivity extends AppCompatActivity
     private void track_user() {
 
         String m_androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-       // Toast.makeText(MapsActivity.this, m_androidId, Toast.LENGTH_LONG).show();
+        // Toast.makeText(MapsActivity.this, m_androidId, Toast.LENGTH_LONG).show();
 
 
         Db = FirebaseDatabase.getInstance().getReference("track").child("user").child(m_androidId);
@@ -280,11 +265,11 @@ public class MapsActivity extends AppCompatActivity
                 String id = dataSnapshot.child("id").getValue().toString();
                 String name = dataSnapshot.child("name").getValue().toString();
                 try {
-                // check if user is sxisted, if user is existed start tracking
-                        if(m_androidId.equals(id)){
-                            requestAppPermissions ();
-                            myRef.child(id).child("name").setValue(name);
-                        }
+                    // check if user is sxisted, if user is existed start tracking
+                    if(m_androidId.equals(id)){
+                        requestAppPermissions ();
+                        myRef.child(id).child("name").setValue(name);
+                    }
                 }
                 catch (NumberFormatException e)
                 {
@@ -549,7 +534,7 @@ public class MapsActivity extends AppCompatActivity
                 GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofencelist);
                 PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
 
-                if (ActivityCompat.checkSelfPermission(MapsActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(MapsActivity2.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
                     // here to request the missing permissions, and then overriding
@@ -853,7 +838,7 @@ public class MapsActivity extends AppCompatActivity
 
 
     private void playSound(int resId) {
-        mp = MediaPlayer.create(MapsActivity.this, resId);
+        mp = MediaPlayer.create(MapsActivity2.this, resId);
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -879,27 +864,9 @@ public class MapsActivity extends AppCompatActivity
 
 
             case R.id.ring:
+                Intent amphibiansActivityIntent = new Intent(MapsActivity2.this, user_id.class);
+                startActivity(amphibiansActivityIntent);
 
-                AlertDialog.Builder builder=new AlertDialog.Builder(MapsActivity.this);
-                builder.setTitle("Confirmation");
-                builder.setMessage("Tag this user ?");
-
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent amphibiansActivityIntent = new Intent(MapsActivity.this, user_id.class);
-                        startActivity(amphibiansActivityIntent);
-
-                    }
-                });
-
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                builder.show();
                 return true;
 
 
@@ -942,7 +909,7 @@ public class MapsActivity extends AppCompatActivity
     private void showNotification()
     {
         Uri sound = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.alert);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MapsActivity. this, "default_notification_channel_id" )
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MapsActivity2. this, "default_notification_channel_id" )
                 .setSmallIcon(R.drawable. ic_launcher_foreground )
                 .setContentTitle( "Test" )
                 .setSound(sound)
@@ -1008,7 +975,7 @@ public class MapsActivity extends AppCompatActivity
     // enable location foreground tracking service
     private void requestAppPermissions () {
 
-        Dexter.withActivity(MapsActivity.this)
+        Dexter.withActivity(MapsActivity2.this)
 
                 .withPermissions(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -1020,7 +987,7 @@ public class MapsActivity extends AppCompatActivity
                         if (report.areAllPermissionsGranted()) {
                             // do you work now
                             //interact.downloadImage(array);
-                            startService(new Intent(MapsActivity.this, ForegroundService.class));
+                            startService(new Intent(MapsActivity2.this, ForegroundService.class));
                         }
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
@@ -1040,7 +1007,7 @@ public class MapsActivity extends AppCompatActivity
 
     private void showSettingsDialog() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity2.this);
 
         builder.setTitle("Need Permissions");
 

@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.alertup_user.databinding.ActivityFullscreenBinding;
 
@@ -40,17 +41,28 @@ public class FullscreenActivity extends AppCompatActivity {
         // The Runnable will be executed after the given delay time
         h.postDelayed(r, 2000); // will be delayed for 1.5 seconds
 
+
+
+
     }
 
     Runnable r = new Runnable() {
         @Override
         public void run() {
+            @SuppressLint("WrongConstant") SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_APPEND);
+            String sText = sharedPreferences.getString("ids", "");
 
-                //String welcome_boy = "Welcome   "+ name;
-                // welcome.setText(welcome_boy);
-                Intent amphibiansActivityIntent = new Intent(FullscreenActivity.this, MapsActivity.class);
-                //  Toast.makeText(Splash_screen.this, name,  Toast.LENGTH_LONG).show();
+            if (sText!=null && !sText.isEmpty() ) {
+                Intent amphibiansActivityIntent = new Intent(FullscreenActivity.this, MapsActivity2.class);
                 startActivity(amphibiansActivityIntent);
+            }
+            else{
+                Toast.makeText(FullscreenActivity.this, "",  Toast.LENGTH_LONG).show();
+                Intent amphibiansActivityIntent = new Intent(FullscreenActivity.this, MapsActivity.class);
+                startActivity(amphibiansActivityIntent);
+
+            }
+
 
 
         }

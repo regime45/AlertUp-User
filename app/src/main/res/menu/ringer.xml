@@ -6,7 +6,7 @@
 
 
     <item android:id="@+id/ring"
-        android:title="ID"
+        android:title="Tagging"
         app:showAsAction="always"
 
 

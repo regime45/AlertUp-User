@@ -9,18 +9,23 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Html;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.jakewharton.processphoenix.ProcessPhoenix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class user_id extends AppCompatActivity {
     ImageView ivOutput, urlcontact;
+    Button ok;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +35,29 @@ public class user_id extends AppCompatActivity {
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>User ID</font>"));
 
         ivOutput=  (findViewById(R.id.iv_output));
-        updateViews();
+        ok= findViewById(R.id.ok);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessPhoenix.triggerRebirth(getApplicationContext());
+            }
+        });
+
+
+                updateViews();
     }
 
     public void updateViews() {
 
         @SuppressLint("WrongConstant") SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_APPEND);
-        String sText = sharedPreferences.getString("id", "");
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        String m_androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        editor.putString("ids", String.valueOf(m_androidId));
+        editor.commit();
+
 
 
         // switch1.setChecked(switchOnOff);
@@ -49,7 +70,7 @@ public class user_id extends AppCompatActivity {
         MultiFormatWriter writer = new MultiFormatWriter();
 
         try {
-            BitMatrix matrix= writer.encode(sText, BarcodeFormat.QR_CODE
+            BitMatrix matrix= writer.encode(m_androidId, BarcodeFormat.QR_CODE
                     ,300, 300);
             BarcodeEncoder encoder = new BarcodeEncoder();
             Bitmap bitmap = encoder.createBitmap(matrix);
@@ -63,4 +84,6 @@ public class user_id extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
 }
